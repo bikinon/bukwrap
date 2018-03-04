@@ -178,7 +178,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtMinD">
       <Properties>
-        <Property name="text" type="java.lang.String" value="30"/>
+        <Property name="text" type="java.lang.String" value="12"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtBuffer">

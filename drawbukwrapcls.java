@@ -3,7 +3,8 @@ package bukwrap;
   *
   * Description
   *
-  * @version 1.0 from 8/3/2016
+  * @version 1.0 from 8/3/2016 
+  * This version 4/3/2018 - New type of P/S section
   * @author Tim Gathercole
   */
 
@@ -38,6 +39,8 @@ public class drawbukwrapcls extends dxf12objects {
   
   public String CUT = "CUT";
   public String CREASE = "CREASE";
+  public String SAFETY = "SAFETY";
+  public String AUX ="Annotation";
   public int col = 1; // Line Colour
   public String ltype = "CONTINUOUS"; // Line Type
   
@@ -55,10 +58,11 @@ public class drawbukwrapcls extends dxf12objects {
     dxf += dxf_header12();
     
     // draw the main body starting main depth btm right
+    this.absMove(0,0); 
     double btmLn = ((lmain + buffer * 2) - (fingerRad * 2)) / 2;
-    Line(-btmLn, 0, "SAFETY"); 
-    arc2((xabs - fingerRad), yabs, fingerRad, 0, 180, -fingerRad*2, 0, "SAFETY");
-    Line(-btmLn, 0, "SAFETY"); 
+    Line(-btmLn, 0, SAFETY); 
+    arc2((xabs - fingerRad), yabs, fingerRad, 0, 180, -fingerRad*2, 0, SAFETY);
+    Line(-btmLn, 0, SAFETY); 
     
     mainBody();
     
@@ -119,30 +123,30 @@ public class drawbukwrapcls extends dxf12objects {
     Line(0, strght, CUT);
     Line(-bang, bAngUp, CUT);
     Line(0, bangStr, CUT);
-    Line(-tabLen, tabAng, "SAFETY");
+    Line(-tabLen, tabAng, SAFETY);
     relMove(tabLen, -tabAng);
-    this.arc2(this.xabs, this.yabs + tabR, tabR, 270, 90, 0, (tabR * 2), "SAFETY");
-    Line(-tabLen, 0, "SAFETY");
+    this.arc2(this.xabs, this.yabs + tabR, tabR, 270, 90, 0, (tabR * 2), SAFETY);
+    Line(-tabLen, 0, SAFETY);
     relMove(tabLen, 0);
-    Line(-arcIn, ps, "SAFETY");
+    Line(-arcIn, ps, SAFETY);
     
-    Line(-lmain -(buffer * 2) + ((bang + arcIn) * 2), 0, "SAFETY");
+    Line(-lmain -(buffer * 2) + ((bang + arcIn) * 2), 0, SAFETY);
     
     relMove(-(bang + arcIn), -this.psflap);
     Line(0, strght, CUT);
     Line(bang, bAngUp, CUT);
     Line(0, bangStr, CUT);
-    Line(tabLen, tabAng, "SAFETY");
+    Line(tabLen, tabAng, SAFETY);
     relMove(-tabLen, -tabAng);
-    this.arc2(this.xabs, this.yabs + tabR, tabR, 90, 270, 0, (tabR * 2), "SAFETY");
-    Line(tabLen, 0, "SAFETY");
+    this.arc2(this.xabs, this.yabs + tabR, tabR, 90, 270, 0, (tabR * 2), SAFETY);
+    Line(tabLen, 0, SAFETY);
     relMove(-tabLen, 0);
-    Line(arcIn, ps, "SAFETY");  
+    Line(arcIn, ps, SAFETY);  
   } // psTopFlap
   
   
   
-  protected void psTopFlap_RC_Current() {
+  protected void psTopFlap_RC_old() {
   // Top Flap - Peel & Seal / Rippa Tape section    
     double tabBang = 5;
     double tabTang = 3.5;
@@ -166,7 +170,7 @@ public class drawbukwrapcls extends dxf12objects {
     relMove(tabLen - crnHorz, tabTang); // Move back & continue drawing Tab
     Line(-psAng, tabRippaStrt - tabTang, CUT);
     
-    Line(-lmain -(buffer * 2) + ((crnHorz + psAng) * 2), 0, "CUT");
+    Line(-lmain -(buffer * 2) + ((crnHorz + psAng) * 2), 0, CUT);
     
     // Left Side PS Tab Section
     Line(-psAng, -(tabRippaStrt - tabTang), CUT);
@@ -189,20 +193,101 @@ public class drawbukwrapcls extends dxf12objects {
   double psTopLine = lmain + (buffer * 2) - ((crnHorz + psEdgeGap) * 2);
   
   relMove(crnHorz + psEdgeGap, psflap - psTopDown);
-  Line(psTopLine, 0, "Annotation");  
+  Line(psTopLine, 0, AUX);  
   relMove(0, -psWidth);
-  Line(-psTopLine, 0, "Annotation");  
+  Line(-psTopLine, 0, AUX);  
   relMove(0, -psRipGap);
-  Line(psTopLine, 0, "Annotation");
+  Line(psTopLine, 0, AUX);
   relMove(0, -ripperWidth);
-  Line(-psTopLine, 0, "Annotation");
+  Line(-psTopLine, 0, AUX);
   
-  TextInsert((psTopLine / 2) - 15, 14, "Peel & Seal", "Annotation");
-  TextInsert((psTopLine / 2) - 15, -1, "Rippa Tape", "Annotation");
+  TextInsert((psTopLine / 2) - 15, 14, "Peel & Seal", AUX);
+  TextInsert((psTopLine / 2) - 15, -1, "Rippa Tape", AUX);
+  
+  } // psTopFlap_RC_Current_1
+  
+  
+
+  protected void psTopFlap_RC_Current() {
+  // Top Flap - Peel & Seal / Rippa Tape section    
+    double tabBang = 7;
+    double tabRip = 16.5;
+    double tabInrCutIn = 7.5;
+    double crnHorz = 5;
+    double topCutIn = 17.5; //17.4235856;
+    double tabVertGap = 9.5;
+    double tabLen = 32;
+    double tabPsVert = 26;
+    double ps = 20;
+    double psAng = 4;
+    double strght = this.psflap - (tabPsVert + tabRip);
+    double tabArcIn = 31.07454975, tabArcUp = 0.3511986, tabArcRad = 28.57521973; // Movements to center from x/ytmp
+    double topArcin = 41.27815623, topArcUp = 18.43147838, topArcRad = 33.83333337;  // Movements to center from x/ytmp
+    double xtmp = 0, ytmp = 0;
+    
+    // Right Side PS Tab Section
+    Line(0, strght, CUT);
+//    this.relMove(lmain + (buffer * 2), 0);
+//    Line(0, strght, "CUTCRE6");
+//    this.relMove(-(lmain + (buffer * 2)), 0);
+    xtmp = this.xabs; // Store
+    ytmp = this.yabs;
+    Line(-tabLen, tabBang, SAFETY);
+    relMove(0, tabVertGap);
+    Line(tabLen - tabInrCutIn, 0, SAFETY);
+    // Tab
+    this.arc2(xtmp - tabArcIn, ytmp + tabArcUp, tabArcRad, 0.39235112, 34.41153183, xtmp, ytmp, CUT);
+    // Top Arc
+    this.arc2(xtmp - topArcin, ytmp + topArcUp, topArcRad, 356.72731750, 45.34770455, xtmp, ytmp, CUT);
+    
+    this.absMove(xtmp - topCutIn, ytmp + this.psflap - strght);
+  //  relMove(-topCutIn + tabInrCutIn, tabPsVert);
+    
+    Line(-lmain -(buffer * 2) + (topCutIn * 2), 0, CUT);
+    
+    // Left Side PS Tab Section
+    this.absMove(xtmp - lmain - (buffer * 2), ytmp);
+    xtmp = this.xabs; // Store
+    ytmp = this.yabs;
+    
+    Line(0, -strght, CUT);
+    this.relMove(0, strght);
+    Line(tabLen, tabBang, SAFETY);
+    
+    relMove(0, tabVertGap);
+    Line(-tabLen + tabInrCutIn, 0, SAFETY);
+    // Tab
+    this.arc2(xtmp + tabArcIn, ytmp + tabArcUp, tabArcRad, 145.58846817, 179.60764888, xtmp, ytmp, CUT);
+    // Top Arc
+    this.arc2(xtmp + topArcin, ytmp + topArcUp, topArcRad, 134.65229545, 183.27268250, xtmp, ytmp, CUT);
+    
+
+   
+  // **** Peel & Seal / Rippa Tape ****
+  double psEdgeGap = 10;
+  double psTopDown = 4;
+  double psWidth = 20;
+  double ripperWidth = 4;
+  double psRipGap = 4;
+  double psTopLine = lmain + (buffer * 2) - (psEdgeGap * 2);
+  
+  this.absMove(-(lmain + (buffer * 2)) + psEdgeGap ,this.winr + this.wotr1 + this.dotr1 + this.wotr2 + this.dotr2 + this.psflap - psTopDown);  
+  
+  Line(psTopLine, 0, AUX);  
+  relMove(0, -psWidth);
+  Line(-psTopLine, 0, AUX);  
+  relMove(0, -psRipGap);
+  Line(psTopLine, 0, AUX);
+  relMove(0, -ripperWidth);
+  Line(-psTopLine, 0, AUX);
+  
+  TextInsert((psTopLine / 2) - 15, 14, "Peel & Seal", AUX);
+  TextInsert((psTopLine / 2) - 15, -1, "Rippa Tape", AUX);
   
   } // psTopFlap_RC_Current
   
-  
+
+
   
   protected boolean wrapSection() {
     // Wrap body section
@@ -215,11 +300,11 @@ public class drawbukwrapcls extends dxf12objects {
     Line(lmain + (buffer * 2), 0, CREASE);
     // Ghost additonal Creases 
     relMove(-(lmain + (buffer * 2)), dotr1);
-    Line(lmain + (buffer * 2), 0, "Annotation");
+    Line(lmain + (buffer * 2), 0, AUX);
     relMove(0, wotr2);
-    Line(-(lmain + (buffer * 2)), 0, "Annotation");    
+    Line(-(lmain + (buffer * 2)), 0, AUX);    
     relMove(0, dotr2);
-    Line(lmain + (buffer * 2), 0, "Annotation");
+    Line(lmain + (buffer * 2), 0, AUX);
     
     return true;  
   }  

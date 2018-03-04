@@ -73,7 +73,7 @@ public class Bukwrap extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel11.setText("P and S Flap:");
 
-        txtMinD.setText("30");
+        txtMinD.setText("12");
 
         txtBuffer.setText("20.5");
         txtBuffer.addActionListener(new java.awt.event.ActionListener() {
